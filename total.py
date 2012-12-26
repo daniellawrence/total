@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
 total: a command line totaler to be it is a consumer of stdout.
-Usally space or tab seperated data, it will then offer the user magic varibles
+Usually space or tab separated data, it will then offer the user magic variables
 to do things like:
  $1     - The total of all the items in column 1
- $2_max - The maxium number in all of column 2
- $3_avg - The avgerage number of the data in column 3
- $4_min - The minium number in all of column 4
+ $2_max - The maximum number in all of column 2
+ $3_avg - The average number of the data in column 3
+ $4_min - The minimum number in all of column 4
 
 Example:
  $ vmstat 1 5 | total 'The average cache per second is $4_avg'
@@ -19,7 +19,6 @@ TODO:
 """
 import sys
 import re
-from operator import itemgetter
 
 def avg(data_set):
     """ Take a data set and turn it in to an average number for the dataset. 
@@ -115,14 +114,14 @@ def process_data(delimiter=None, ignore=None):
             data[bit_no].append( str_bit )
 
 
-    # If we were not able to capture any data then dont try and process it.
+    # If we were not able to capture any data then don't try and process it.
     data_length = len( data )
     if data_length == 0:
         print "Unable to process data, you might want to change the delimiter"
         print "You can change the delimiter via the '-d' or '--delimiter' flag"
         sys.exit(1)
     
-    # loop over the caputred data, we make a copy of the data dict() as we 
+    # loop over the captured data, we make a copy of the data dict() as we 
     # modify the data's length in the loop.
     for col, col_data in data.copy().items():
 
@@ -221,7 +220,7 @@ def main(user_display, delimiter=None, ignore=None, list_only=None):
 
 
 
-    # replcae all the $key with $(key)s. 
+    # replace all the $key with $(key)s. 
     # This makes it easy for users to enter in a key.
     # And allowed python to do the dict() mapping to the string.
     converted_display = re.sub('\$(?P<m>\w+)',"%(\g<m>)s", user_display )
