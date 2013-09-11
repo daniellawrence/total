@@ -4,12 +4,12 @@ total: a command line totaler to be it is a consumer of stdout.
 Usually space or tab separated data, it will then offer the user magic variables
 to do things like:
  $1     - The total of all the items in column 1
- $2_max - The maximum number in all of column 2
- $3_avg - The average number of the data in column 3
- $4_min - The minimum number in all of column 4
+ $2:max - The maximum number in all of column 2
+ $3:avg - The average number of the data in column 3
+ $4:min - The minimum number in all of column 4
 
 Example:
- $ vmstat 1 5 | total 'The average cache per second is $4_avg'
+ $ vmstat 1 5 | total 'The average cache per second is $4:avg'
  the average cache per second is 74880
 
 TODO:
@@ -38,9 +38,14 @@ def only_numbers(data_set):
     """ Return a sub list of data_set, that only contains its numbers. """
     new_data_set = []
     for i in data_set:
-        if not i.isdigit():
+        if not i:
             continue
-        i = int( i )
+        if '.' not in i and not i.isdigit():
+            continue
+        if '.' not in i:
+            i = int( i )
+        else:
+            i = float( i )
         new_data_set.append( i )
     return new_data_set
 
@@ -127,20 +132,22 @@ def process_data(delimiter=None, ignore=None):
 
         title = get_title( col_data )
 
+
         if title:
             col_data = col_data[1:]
         if not title:
             title = str(col)
 
+
         # So far all these operations will work without making sure all the the
         # data is numbers.
-        data['%s_count' % col] = len(col_data)
-        data['%s_list' % col] = ",".join( data[col] )
-        #data['%s_most' % col] = ",".join( data[col] )
+        data['%s:count' % col] = len(col_data)
+        data['%s:list' % col] = ",".join( data[col] )
+        #data['%s:most' % col] = ",".join( data[col] )
 
-        data['%s_count' % title] = len(col_data)
-        data['%s_list' % title] = ",".join( data[col] )
-        #data['%s_most' % title] = data[col]
+        data['%s:count' % title] = len(col_data)
+        data['%s:list' % title] = ",".join( data[col] )
+        #data['%s:most' % title] = data[col]
 
         # allow for the logic of $key to really be $key_total
         data['%s' % col] = "%d (count)" % len(col_data)
@@ -152,33 +159,33 @@ def process_data(delimiter=None, ignore=None):
         col_data = only_numbers( col_data )
 
         # count that shows only the numbers - NumberCOUNT
-        data['%s_ncount' % col] = len(col_data)
-        data['%s_ncount' % title] = len(col_data)
+        data['%s:ncount' % col] = len(col_data)
+        data['%s:ncount' % title] = len(col_data)
 
         # If there is no col_data then do not try and work out avg, min, etc
         if len(col_data) == 0:
             continue 
 
         # work out avg, min, etc
-        data['%d_total' % col] = sum(col_data)
-        data['%d_avg' % col] = avg(col_data)
-        data['%d_min' % col] = min(col_data)
-        data['%d_max' % col] = max(col_data)
+        data['%d:total' % col] = sum(col_data)
+        data['%d:avg' % col] = avg(col_data)
+        data['%d:min' % col] = min(col_data)
+        data['%d:max' % col] = max(col_data)
 
-        data['%s_total' % title] = sum(col_data)
-        data['%s_avg' % title] = avg(col_data)
-        data['%s_min' % title] = min(col_data)
-        data['%s_max' % title] = max(col_data)
+        data['%s:total' % title] = sum(col_data)
+        data['%s:avg' % title] = avg(col_data)
+        data['%s:min' % title] = min(col_data)
+        data['%s:max' % title] = max(col_data)
 
-        # allow for the logic of $key to really be $key_total
-        data['%s' % col] = data["%s_total" % col]
-        data['%s' % title] = data["%s_total" % col]
+        # allow for the logic of $key to really be $key:total
+        data['%s' % col] = data["%s:total" % col]
+        data['%s' % title] = data["%s:total" % col]
 
     return data
 
 def col_list(data):
 
-    print "You can use the following cols for: _total, _avg, _min, _max"
+    print "You can use the following cols for: :total, :avg, :min, :max"
     cols = set([])
     all_keys = data.keys()
     num_col = set([])
@@ -188,13 +195,15 @@ def col_list(data):
             continue
         if not key:
             continue
-        if '_' not in key:
+        if ':' not in key:
             continue
 
         if key.isdigit():
             #num_col.add(num_col)
             continue
-        cols.add( key.split('_')[0] )
+        #print key
+        cols.add( key ) 
+        #cols.add( key.split(':')[0] )
 
     if cols:
         print ", ".join( sorted(cols) )
@@ -205,7 +214,6 @@ def col_list(data):
 def main(user_display, delimiter=None, ignore=None, list_only=None):
     # process the data from stdin
     data = process_data(delimiter, ignore)
-
 
     if list_only:
         col_list(data)
@@ -223,7 +231,9 @@ def main(user_display, delimiter=None, ignore=None, list_only=None):
     # replace all the $key with $(key)s. 
     # This makes it easy for users to enter in a key.
     # And allowed python to do the dict() mapping to the string.
-    converted_display = re.sub('\$(?P<m>\w+)',"%(\g<m>)s", user_display )
+    converted_display = re.sub('\$(?P<m>\w+:\w+)',"%(\g<m>)s", user_display )
+
+    #print "DEBUG: %s" % converted_display
 
     return_string = None
     try:
