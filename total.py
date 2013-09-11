@@ -231,7 +231,8 @@ def main(user_display, delimiter=None, ignore=None, list_only=None):
     # replace all the $key with $(key)s. 
     # This makes it easy for users to enter in a key.
     # And allowed python to do the dict() mapping to the string.
-    converted_display = re.sub('\$(?P<m>\w+:\w+)',"%(\g<m>)s", user_display )
+    converted_display = re.sub('(?P<m>\$\w+)',"\g<m>:total", user_display )
+    converted_display = re.sub('\$(?P<m>\w+:\w+)',"%(\g<m>)s", converted_display )
 
     #print "DEBUG: %s" % converted_display
 
