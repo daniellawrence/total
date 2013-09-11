@@ -244,7 +244,7 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
             w = "%s:total" % w
         field_list.append(w)
     converted_display = " ".join(field_list)
-    converted_display = re.sub('\$(?P<m>\w+:\w+)', "%(\g<m>)s", converted_display)
+    converted_display = re.sub('\$(?P<m>[a-zA-Z0-9-_]+:\w+)', "%(\g<m>)s", converted_display)
 
     # print "DEBUG: %s" % converted_display
 
