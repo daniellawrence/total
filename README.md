@@ -96,7 +96,6 @@ To get a list of all the *keys* that can be used in the *$* ( dollar ) notation 
 ```sh
 $ vmstat 1 2 | totat --list ''
 You can use the following cols for: :total, :avg, :min, :max
-0, 1, 10, 11, 12, 13, 14, 15, 16, 2, 3, 4, 5, 6, 7, 8, 9, b, bi,
 bo, buff, cache, cs, free, id, in, r, si, so, swpd, sy, us, wa
 ```
 
