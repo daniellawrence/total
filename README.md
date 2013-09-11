@@ -64,14 +64,21 @@ $ vmstat 1 3 | total '$id'
 297
 ```
 
-However the total amount of idle cpu time isn't a very good marker, what you really want is the average
+You can reference the data as either the name of the column (:total is the default)
+```sh
+# vmstat 1 3 | ./total/total.py '$cache $cache:total $6 $6:total'
+8262988 8262988 8262988 8262988
+```
+
+Totaling or a Sum is nice, However the total amount of idle cpu time isn't a very good marker.
+What you really want is the average id...
 
 ```sh
 $ vmstat 1 3 | total '$id:avg'
 99
 ```
 
-Or maybe just the max
+Or maybe just the max id
 
 ```sh
 $ vmstat 1 3 | total '$id:max'
@@ -84,6 +91,7 @@ Or maybe you want to have this formatted for a email or alert.
 $ vmstat 1 3 | total 'The average idle cpu was $id:avg, with the max of $id:max'
 The average idle cpu was 97, with the max of 98
 ```
+
 
 OR maybe something crazy like the average cache minus the average buff
 
