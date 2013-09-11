@@ -5,12 +5,15 @@ import setuptools
 
 README = "/".join([os.path.dirname(__file__), "README.md"])
 
-with open(README) as file:
+try:
+    with open(README) as file:
         long_description = file.read()
+except IOError:
+    long_description = ''
 
 setup(
     name='total',
-    version='0.0.3',
+    version='0.0.4',
     description='Simple AWK tasks, made awesome',
     author='Danny Lawrence',
     author_email='dannyla@linux.com',
