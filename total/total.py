@@ -236,9 +236,15 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
     # replace all the $key with $(key)s.
     # This makes it easy for users to enter in a key.
     # And allowed python to do the dict() mapping to the string.
-    converted_display = re.sub('(?P<m>\$\w+)', "\g<m>:total", user_display)
-    converted_display = re.sub(
-        '\$(?P<m>\w+:\w+)', "%(\g<m>)s", converted_display)
+    converted_display = []
+    #converted_display = re.sub('(?P<m>\$\w+)', "\g<m>:total", converted_display)
+    field_list = []
+    for w in user_display.split():
+        if w.startswith('$') and ':' not in w:
+            w = "%s:total" % w
+        field_list.append(w)
+    converted_display = " ".join(field_list)
+    converted_display = re.sub('\$(?P<m>\w+:\w+)', "%(\g<m>)s", converted_display)
 
     # print "DEBUG: %s" % converted_display
 
@@ -250,7 +256,7 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
         sys.exit(3)
         # print "Keys that where found: %s" % ", ".join( data.keys())
 
-    print(return_string)
+    print("%s" % return_string)
 
 
 def main():
