@@ -121,7 +121,7 @@ $ vmstat 1 3 | total '$id:avg'
 Install from source
 
 ```sh
-$ git clone git://github.com/daniellawrence/total)
+$ git clone git://github.com/daniellawrence/total
 $ cd total
 $ sudo ./setup.py install
 # test
