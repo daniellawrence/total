@@ -4,19 +4,24 @@ total: a command line totaler to be it is a consumer of stdout.
 Usually space or tab separated data, it will then offer the user magic variables
 to do things like:
 
- $1     - The total of all the items in column 1
- $2:max - The maximum number in all of column 2
- $3:avg - The average number of the data in column 3
- $4:min - The minimum number in all of column 4
+ $1       - The total of all the items in column 1
+ $1:total - The total of all the items in column 1
+ $2:max   - The maximum number in all of column 2
+ $4:avg   - The average number of the data in column 4
+ $4:min   - The minimum number in all of column 4
 
-Example:
+If the output has headers then you can reference the data using the headers,
+not the column position.
+
+Example using vmstat:
+
+We can ask for the cache column without knowning the position.
+
  $ vmstat 1 5 | total 'The average cache per second is $cache:avg'
  the average cache per second is 74880
 
-TODO:
------
-* add stddev
-* logic for hostinfo style value_report
+More examples can be found at: http://github.com/daniellawrence/total
+
 """
 import sys
 import re
@@ -251,7 +256,7 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('format', metavar='format', type=str, default='$1')
 
     # added cut style delimiter logic
