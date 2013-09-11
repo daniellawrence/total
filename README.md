@@ -5,7 +5,7 @@ While writing my last post I made up some syntax ( pseudo syntax ) that dose not
 The syntax was to get the average CPU idle time from the last 3 seconds, via the vmstat command.
 
 ```sh
-vmstat 1 3 | total '$id_average'
+vmstat 1 3 | total '$id:average'
 ```
 
 
@@ -66,28 +66,28 @@ $ vmstat 1 3 | total '$id'
 However the total amount of idle cpu time isn't a very good marker, what you really want is the average
 
 ```sh
-$ vmstat 1 3 | total '$id_avg'
+$ vmstat 1 3 | total '$id:avg'
 99
 ```
 
 Or maybe just the max
 
 ```sh
-$ vmstat 1 3 | total '$id_max'
+$ vmstat 1 3 | total '$id:max'
 100
 ```
 
 Or maybe you want to have this formatted for a email or alert.
 
 ```sh
-$ vmstat 1 3 | total 'The average idle cpu was $id_avg, with the max of $id_max'
+$ vmstat 1 3 | total 'The average idle cpu was $id:avg, with the max of $id:max'
 99
 ```
 
 OR maybe something crazy like the average cache minus the average buff
 
 ```sh
-vmstat 1 2 | ./total.py '$cache_avg - $buff_avg'|bc
+vmstat 1 2 | ./total.py '$cache:avg - $buff:avg'|bc
 1932560
 ```
 
@@ -95,7 +95,7 @@ To get a list of all the *keys* that can be used in the *$* ( dollar ) notation 
 
 ```sh
 $ vmstat 1 2 | ./total.py --list ''
-You can use the following cols for: _total, _avg, _min, _max
+You can use the following cols for: :total, :avg, :min, :max
 0, 1, 10, 11, 12, 13, 14, 15, 16, 2, 3, 4, 5, 6, 7, 8, 9, b, bi,
 bo, buff, cache, cs, free, id, in, r, si, so, swpd, sy, us, wa
 ```
@@ -104,7 +104,7 @@ Its not just for vmstat either...
 
 ```sh
 netstat -i | ./total.py --list ''
-You can use the following cols for: _total, _avg, _min, _max
+You can use the following cols for: :total, :avg, :min, :max
 0, 1, 10, 11, 12, 2, 3, 4, 5, 6, 7, 8, 9, flg, iface, met, mtu, rx-drp, rx-err, rx-ok, rx-ovr, tx-drp, tx-err, tx-ok, tx-ovr
 ```
 
@@ -113,5 +113,5 @@ Set up
 
 ```sh
 $ git clone git://github.com/daniellawrence/total)
-$ vmstat 1 3 | total '$id_avg'
+$ vmstat 1 3 | total '$id:avg'
 ```
