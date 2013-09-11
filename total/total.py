@@ -72,7 +72,7 @@ def process_data(delimiter=None, ignore=None):
     stdin_lines = sys.__stdin__.readlines()
 
     if len(stdin_lines) == 0:
-        print "No data was found in the stdin buffer"
+        print("No data was found in the stdin buffer")
         sys.exit(4)
 
     raw_data = []
@@ -118,7 +118,7 @@ def process_data(delimiter=None, ignore=None):
             try:
                 str_bit = str(bit)
             except ValueError as error:
-                print "Unable to convert '%s' to str()" % error
+                print("Unable to convert '%s' to str()" % error)
                 continue
 
             data[bit_no].append(str_bit)
@@ -126,8 +126,8 @@ def process_data(delimiter=None, ignore=None):
     # If we were not able to capture any data then don't try and process it.
     data_length = len(data)
     if data_length == 0:
-        print "Unable to process data, you might want to change the delimiter"
-        print "You can change the delimiter via the '-d' or '--delimiter' flag"
+        print("Unable to process data, you might want to change the delimiter")
+        print("You can change the delimiter via the '-d' or '--delimiter' flag")
         sys.exit(1)
 
     # loop over the captured data, we make a copy of the data dict() as we
@@ -188,7 +188,7 @@ def process_data(delimiter=None, ignore=None):
 
 def col_list(data):
 
-    print "You can use the following cols for: :total, :avg, :min, :max"
+    print("You can use the following cols for: :total, :avg, :min, :max")
     cols = set([])
     all_keys = data.keys()
     num_col = set([])
@@ -208,9 +208,9 @@ def col_list(data):
         cols.add(key.split(':')[0])
 
     if cols:
-        print ", ".join(sorted(cols))
+        print(", ".join(sorted(cols)))
     if not cols:
-        print ", ".join(num_col)
+        print(", ".join(num_col))
 
 
 def _main(user_display, delimiter=None, ignore=None, list_only=None):
@@ -225,7 +225,7 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
 
     # the format should have alteast 1: $key
     if '$' not in user_display:
-        print 'Looks like you are missing a $key in your format'
+        print('Looks like you are missing a $key in your format')
         sys.exit(2)
 
     # replace all the $key with $(key)s.
@@ -241,11 +241,11 @@ def _main(user_display, delimiter=None, ignore=None, list_only=None):
     try:
         return_string = converted_display % data
     except KeyError as error:
-        print "Wasn't able to find data for the key %s" % error
+        print("Wasn't able to find data for the key %s" % error)
         sys.exit(3)
         # print "Keys that where found: %s" % ", ".join( data.keys())
 
-    print return_string
+    print(return_string)
 
 
 def main():
