@@ -8,8 +8,9 @@ The syntax was to get the average CPU idle time from the last 3 seconds, via the
 vmstat 1 3 | total '$id:average'
 ```
 
-
 This made me stop writing the post and start working on the new command and then this post.
+
+[![Build Status](https://travis-ci.org/daniellawrence/total.png?branch=master)](https://travis-ci.org/daniellawrence/total)
 
 total
 ------
