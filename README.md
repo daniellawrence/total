@@ -105,14 +105,26 @@ Its not just for vmstat either...
 ```sh
 netstat -i | total --list ''
 You can use the following cols for: :total, :avg, :min, :max
-0, 1, 10, 11, 12, 2, 3, 4, 5, 6, 7, 8, 9, flg, iface, met, mtu, rx-drp, rx-err, rx-ok, rx-ovr, tx-drp, tx-err, tx-ok, tx-ovr
+flg, iface, met, mtu, rx-drp, rx-err, rx-ok, rx-ovr, tx-drp, tx-err, tx-ok, tx-ovr
 ```
 
-Set up
+How to Install!
 --------
+
+Install from pip
+
+```sh
+$ sudo pip install total
+# test
+$ vmstat 1 3 | total '$id:avg'
+```
+
+Install from source
 
 ```sh
 $ git clone git://github.com/daniellawrence/total)
-$ cp total{.py,}
+$ cd total
+$ sudo ./setup.py install
+# test
 $ vmstat 1 3 | total '$id:avg'
 ```
