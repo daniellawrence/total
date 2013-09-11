@@ -87,14 +87,14 @@ The average idle cpu was 97, with the max of 98
 OR maybe something crazy like the average cache minus the average buff
 
 ```sh
-vmstat 1 2 | ./total.py '$cache:avg - $buff:avg'|bc
+vmstat 1 2 | total '$cache:avg - $buff:avg'|bc
 1932560
 ```
 
 To get a list of all the *keys* that can be used in the *$* ( dollar ) notation you can just run total with --list
 
 ```sh
-$ vmstat 1 2 | ./total.py --list ''
+$ vmstat 1 2 | totat --list ''
 You can use the following cols for: :total, :avg, :min, :max
 0, 1, 10, 11, 12, 13, 14, 15, 16, 2, 3, 4, 5, 6, 7, 8, 9, b, bi,
 bo, buff, cache, cs, free, id, in, r, si, so, swpd, sy, us, wa
@@ -103,7 +103,7 @@ bo, buff, cache, cs, free, id, in, r, si, so, swpd, sy, us, wa
 Its not just for vmstat either...
 
 ```sh
-netstat -i | ./total.py --list ''
+netstat -i | total --list ''
 You can use the following cols for: :total, :avg, :min, :max
 0, 1, 10, 11, 12, 2, 3, 4, 5, 6, 7, 8, 9, flg, iface, met, mtu, rx-drp, rx-err, rx-ok, rx-ovr, tx-drp, tx-err, tx-ok, tx-ovr
 ```
@@ -113,5 +113,6 @@ Set up
 
 ```sh
 $ git clone git://github.com/daniellawrence/total)
+$ cp total{.py,}
 $ vmstat 1 3 | total '$id:avg'
 ```
