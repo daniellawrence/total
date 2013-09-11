@@ -13,7 +13,7 @@ except IOError:
 
 setup(
     name='total',
-    version='0.0.5',
+    version='0.0.6',
     description='Simple AWK tasks, made awesome',
     author='Danny Lawrence',
     author_email='dannyla@linux.com',
