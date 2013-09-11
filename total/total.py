@@ -3,13 +3,14 @@
 total: a command line totaler to be it is a consumer of stdout.
 Usually space or tab separated data, it will then offer the user magic variables
 to do things like:
+
  $1     - The total of all the items in column 1
  $2:max - The maximum number in all of column 2
  $3:avg - The average number of the data in column 3
  $4:min - The minimum number in all of column 4
 
 Example:
- $ vmstat 1 5 | total 'The average cache per second is $4:avg'
+ $ vmstat 1 5 | total 'The average cache per second is $cache:avg'
  the average cache per second is 74880
 
 TODO:
@@ -197,21 +198,19 @@ def col_list(data):
             continue
         if ':' not in key:
             continue
+        key = key.split(':')[0]
 
         if key.isdigit():
-            #num_col.add(num_col)
+            num_col.add(key)
             continue
-        #print key
-        cols.add( key ) 
-        #cols.add( key.split(':')[0] )
+        cols.add( key.split(':')[0] )
 
     if cols:
-        print ", ".join( sorted(cols) )
+        print ", ".join(sorted(cols))
     if not cols:
-        print ", ".join( sorted(num_col) )
-    
+        print ", ".join(num_col)
 
-def main(user_display, delimiter=None, ignore=None, list_only=None):
+def _main(user_display, delimiter=None, ignore=None, list_only=None):
     # process the data from stdin
     data = process_data(delimiter, ignore)
 
@@ -246,7 +245,9 @@ def main(user_display, delimiter=None, ignore=None, list_only=None):
 
     print return_string
 
-if __name__ == '__main__':
+    
+
+def main():
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -261,7 +262,6 @@ if __name__ == '__main__':
     # added grep style ignore logic
     parser.add_argument('--list', dest='list_only', action='store_const', const='True')
 
-
     # grab the args
     args = parser.parse_args()
     user_display = args.format
@@ -269,5 +269,8 @@ if __name__ == '__main__':
     ignore = args.ignore
     list_only = args.list_only
  
-    # call main()
-    main(user_display, delimiter, ignore, list_only )
+    # call _main()
+    _main(user_display, delimiter, ignore, list_only )
+
+if __name__ == '__main__':
+    main()
