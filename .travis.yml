@@ -9,4 +9,6 @@ install:
   - "pip install pyflakes --use-mirrors"
   - "./setup.py install"
 # command to run tests
-script: pyflakes total
+script: 
+  - pyflakes total
+  - echo '1 2 3' | total '$1:total'
