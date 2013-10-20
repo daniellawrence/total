@@ -119,6 +119,12 @@ flg, iface, met, mtu, rx-drp, rx-err, rx-ok, rx-ovr, tx-drp, tx-err, tx-ok, tx-o
 How to Install!
 --------
 
+Quick hack install
+```sh
+$ curl https://raw.github.com/daniellawrence/total/master/total/total.py > total
+$ chmod a+x total
+```
+
 Install from pip
 
 ```sh
