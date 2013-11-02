@@ -3,12 +3,17 @@
 total: a command line totaler to be it is a consumer of stdout.
 Usually space or tab separated data, it will then offer the user magic variables
 to do things like:
-
- $1       - The total of all the items in column 1
- $1:total - The total of all the items in column 1
- $2:max   - The maximum number in all of column 2
- $4:avg   - The average number of the data in column 4
- $4:min   - The minimum number in all of column 4
+&
+ $1        - The total of all the items in column 1
+ $1:total  - The total of all the items in column 1
+ $2:max    - The maximum number in all of column 2
+ $4:avg    - The average number of the data in column 4
+ $4:min    - The minimum number in all of column 4
+ $4:list   - The all items of column 4
+ $4:count  - The count items of column 4
+ $4:nlist  - The all numeric items of column 4
+ $4:ncount - The count numeric items of column 4
+ $4:ulist  - The all unique list of items of column 4
 
 If the output has headers then you can reference the data using the headers,
 not the column position.
@@ -47,9 +52,19 @@ def only_numbers(data_set):
     """ Return a sub list of data_set, that only contains its numbers. """
     new_data_set = []
     for i in data_set:
+        if len(i) > 1 and not i[-1].isdigit() and "".join(i[:-2]).isdigit():
+            number_with_unit = float("".join(i[:-2]))
+            unit = i[-1].lower()
+            if unit == 'm':
+                i = "%s" % (number_with_unit * 1024)
+            if unit == 'g':
+                i = "%s" % (number_with_unit * 1024 * 1024)
+
         if not i:
             continue
         if '.' not in i and not i.isdigit():
+            continue
+        if ':' in i:
             continue
         if '.' not in i:
             i = int(i)
@@ -58,14 +73,18 @@ def only_numbers(data_set):
         new_data_set.append(i)
     return new_data_set
 
-
 def get_title(data_set):
     """ Check if the first item in the data_set is the title. """
     first_item = data_set[0]
     first_item = first_item.strip()
     first_item = first_item.lower()
+
+    r = re.compile("\033\[[0-9;]+m") 
+    first_item = r.sub("", first_item)
+
     if not first_item:
         return None
+
     if not first_item.isdigit():
         return first_item.lower()
     return None
@@ -148,22 +167,26 @@ def process_data(delimiter=None, ignore=None):
 
         # So far all these operations will work without making sure all the the
         # data is numbers.
-        data['%s:count' % col] = len(col_data)
-        data['%s:list' % col] = ",".join(data[col])
+        data['%d:count' % col] = len(col_data)
+        data['%d:list' % col] = ",".join(data[col])
+        data['%d:ulist' % col] = ",".join(set(data[col]))
         #data['%s:most' % col] = ",".join( data[col] )
 
         data['%s:count' % title] = len(col_data)
         data['%s:list' % title] = ",".join(data[col])
+        data['%s:ulist' % title] = ",".join(set(data[col]))
         #data['%s:most' % title] = data[col]
 
         # allow for the logic of $key to really be $key_total
-        data['%s' % col] = "%d (count)" % len(col_data)
+        data['%d' % col] = "%d (count)" % len(col_data)
         data['%s' % title] = "%d (count)" % len(col_data)
 
         # if the col_data is not all_numbers then set the col_data to be
         # only_numbers
         # if not all_numbers( col_data ):
         col_data = only_numbers(col_data)
+        data['%d:nlist' % col] = ",".join([str(i) for i in col_data])
+        data['%s:nlist' % title] = ",".join([str(i) for i in col_data])
 
         # count that shows only the numbers - NumberCOUNT
         data['%s:ncount' % col] = len(col_data)
